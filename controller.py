@@ -18,10 +18,14 @@ class Controller(Flask):
         self.__motors["black_ccw_2"] = Motor(19, "black_ccw_2")
         self.__mpu = mpu6050(0x68)
         # Define control routes
+        self.add_url_rule("/", view_func=self.view_root, methods=["GET"])
         self.add_url_rule("/accel", view_func=self.view_accel, methods=["GET"])
         self.add_url_rule("/gyro", view_func=self.view_gyro, methods=["GET"])
         self.add_url_rule("/motor/<string:name>", view_func=self.view_motor, methods=["GET"])
         self.add_url_rule("/speed/<string:name>", view_func=self.set_speed, methods=["GET", "POST"])
+
+    def view_root(self):
+        return Controller.SUCCESS_MSG_ACCEPTED
 
     def view_gyro(self):
         return str(self.__mpu.get_gyro_data())
