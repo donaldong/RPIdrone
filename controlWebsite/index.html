@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Drone Control </title>
+        <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+        <link rel='stylesheet' href='css/styles.css'>
+    </head>
+    <body>
+        <div id='ipcheck' class='child'>
+            <input type="text" id="address" placeholder='IP Address'/>
+            <input type="submit" id='submit' value='Connect'/>
+            <span>Status: </span><span id='status'>Not Connected</span>
+        </div>
+        <br>
+        <h1> Speed Controls</h1>
+        <div id='controlboard'>
+                <div id='controlnames'>
+                    <h4>Red CW1</h4>
+                    <h4>Red CW2</h4>
+                    <h4>Black CCW1</h4>
+                    <h4>Black CCW2</h4>
+                </div>
+                <div id='controls'>
+                    <input type="range" min="0" max="100" value="0" class="slider" id="red_cw_1"><p>Speed: </p><p id='red_cw_1p'>0%</p><br>
+                    <input type="range" min="0" max="100" value="0" class="slider" id="red_cw_2"><p>Speed: </p><p id='red_cw_2p'>0%</p><br>
+                    <input type="range" min="0" max="100" value="0" class="slider" id="black_ccw_1"><p>Speed: </p><p id='black_ccw_1p'>0%</p><br>
+                    <input type="range" min="0" max="100" value="0" class="slider" id="black_ccw_2"><p>Speed: </p><p id='black_ccw_2p'>0%</p>
+                </div>
+        </div>
+        <script>
+            function checkIP(){
+                var ip = "http://" + $("#address").val();
+                localStorage.address = ip;
+                $.ajax({
+                    type:"GET",
+                    url: ip,
+                    dataType: "html", 
+                    success: function(data){
+                        console.log(data);
+                        if(data){
+                            $("#status").html("Connected");
+                            $("#status").css("color", "green");
+                        }
+                    }
+                });
+            }
+            function updateSpeed(motor){
+                $.ajax({
+                    type: "POST",
+                    url: localStorage.address + "/speed/" + $(motor).attr("id"),
+                    data: {percent: $(motor).val()},
+                    success: function(){
+                        console.log("Speed changed");
+                    }
+                })
+            }
+            $("button").click(function(){
+                runAction(this.id);
+            });
+            $("#submit").click(function(){
+                checkIP();
+            });
+            $("#controls").find("input").on("input", function(){
+                var input = this;
+                $("#" + $(input).attr('id') + "p").html($(input).val() + "%");
+                updateSpeed(this);
+            })            
+            
+        </script>
+    </body>
+</html>
