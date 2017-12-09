@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Gyro Demo</title>
+	<link rel ="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    alpha:<span id="alpha"></span><br>
+    beta:<span id="beta"></span><br>
+    gamma:<span id="gamma"></span><br>
+	<canvas id="myCanvas" ></canvas> 
+	<script>
+
+	//get orientation info
+	if (window.DeviceOrientationEvent) 
+	{
+		window.addEventListener("deviceorientation", function () 
+		{
+			processGyro(event.alpha, event.beta, event.gamma);  
+		}, true);
+	} 
+
+
+	function processGyro(alpha,beta,gamma)
+	{
+		document.getElementById("alpha").innerHTML=alpha;
+		document.getElementById("beta").innerHTML=beta;
+		document.getElementById("gamma").innerHTML =gamma;
+	}
+	var canvas = document.getElementById(‘myCanvas’);
+	var context = canvas.getContext(‘2d’);
+	context.canvas.width  = window.innerWidth;//resize canvas to whatever window dimensions are
+	context.canvas.height = window.innerHeight;
+	context.translate(canvas.width / 2, canvas.height / 2); //put 0,0,0 origin at center of screen instead of upper left corner
+
+	function makeRect(width,height,depth)
+	{
+	var newObj={};
+	var hw=width/2;
+	var hh=height/2;
+	var hd=depth/2;
+	newObj.vertices=[  [-hw,hh,hd],[hw,hh,hd],[hw,-hh,hd],//first triangle
+		  [-hw,hh,hd],[-hw,-hh,hd],[hw,-hh,hd],//2 triangles make front side
+		  [-hw,hh,-hd],[-hw,hh,hd],[-hw,-hh,-hd], //left side
+		  [-hw,hh,hd],[-hw,-hh,hd],[-hw,-hh,-hd],
+		  [hw,hh,-hd],[hw,hh,hd],[hw,-hh,-hd], //right side
+		  [hw,hh,hd],[hw,-hh,hd],[hw,-hh,-hd],
+		  [-hw,hh,-hd],[hw,hh,-hd],[hw,-hh,-hd],//back
+		  [-hw,hh,-hd],[-hw,-hh,-hd],[hw,-hh,-hd],
+		  [-hw,hh,-hd],[hw,hh,-hd],[hw,hh,hd],//top
+		  [-hw,hh,-hd],[-hw,hh,hd],[hw,hh,hd],
+		  [-hw,-hh,-hd],[hw,-hh,-hd],[hw,-hh,hd],//bottom
+		  [-hw,-hh,-hd],[-hw,-hh,hd],[hw,-hh,hd]
+	];
+	
+	return newObj;
+	}
+
+	var cube=makeRect(canvas.width/5,canvas.width/5,canvas.width/5);
+	cube.color=”purple”;
+	var xAxis=makeRect(440,10,10);
+	xAxis.color=”green”;
+	var yAxis=makeRect(10,440,10);
+	yAxis.color=”red”;
+	var zAxis=makeRect(10,10,440);
+	zAxis.color=”blue”;
+	//render loop
+	function renderLoop() 
+	{
+	  	requestAnimationFrame( renderLoop );//better than set interval as it pauses when browser isn’t active
+	  	context.clearRect( -canvas.width/2, -canvas.height/2, canvas.width, canvas.height);//clear screen x, y, width, height
+	  	renderObj(cube);
+  		renderObj(xAxis);
+  		renderObj(yAxis);
+  		renderObj(zAxis);	
+	}
+	renderLoop();
+	</script>
+</body>
+</html>
+
