@@ -2,6 +2,7 @@ from flask import *
 from flask_api import status
 from motor import Motor
 from mpu6050 import mpu6050
+import json
 
 
 class Controller(Flask):
@@ -28,10 +29,10 @@ class Controller(Flask):
         return Controller.SUCCESS_MSG_ACCEPTED
 
     def view_gyro(self):
-        return str(self.__mpu.get_gyro_data())
+        return json.dumps(self.__mpu.get_gyro_data())
 
     def view_accel(self):
-        return str(self.__mpu.get_accel_data())
+        return json.dumps(self.__mpu.get_accel_data())
 
     def view_motor(self, name):
         try:
