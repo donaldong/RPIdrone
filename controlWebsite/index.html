@@ -35,9 +35,7 @@
                 $.ajax({
                     type:"GET",
                     url: ip,
-                    dataType: "html", 
-                    success: function(data){
-                        console.log(data);
+                    dataType: "html", success: function(data){ console.log(data);
                         if(data){
                             $("#status").html("Connected");
                             $("#status").css("color", "green");
@@ -46,14 +44,16 @@
                 });
             }
             function updateSpeed(motor){
-                $.ajax({
-                    type: "POST",
-                    url: localStorage.address + "/speed/" + $(motor).attr("id"),
-                    data: {percent: $(motor).val()},
-                    success: function(){
-                        console.log("Speed changed");
+                var xhttp = new XMLHttpRequest();
+                var obj = JSON.stringify({"percent":parseFloat($(motor).val()/100)});
+                    xhttp.onreadystatechange = function(){
+                        if(this.readyState == 4 && this.status == 202){
+                            console.log(this.responseText);
+                        }
                     }
-                })
+                    xhttp.open("POST", localStorage.address + "/speed/" + $(motor).attr("id"),true);
+                    xhttp.setRequestHeader("Content-Type", "application/json");
+                    xhttp.send(obj);
             }
             $("button").click(function(){
                 runAction(this.id);
