@@ -61,19 +61,15 @@
                     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
                     xhttp.send(obj);
             }
-            var r = 1.0 / 2.0 / 180.0 * 3.1415926535897932384626433832795028841971693993751;
             function getGyro(){
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function(){
                     if(this.readyState == 4 && this.status == 202 || this.status == 200){
                         if(this.responseText){
                             var response = JSON.parse(this.responseText);
-                            var alphaPrev = parseFloat($("#alpha").html());
-                            var betaPrev = parseFloat($("#beta").html());
-                            var gammaPrev = parseFloat($("#gamma").html());
-                            $("#alpha").html(alphaPrev + response.x * r);
-                            $("#beta").html(betaPrev + response.y * r);
-                            $("#gamma").html(gammaPrev + response.z * r);
+                            $("#alpha").html(response.x);
+                            $("#beta").html(response.y);
+                            $("#gamma").html(response.z);
                         }
                     }
                 }
@@ -150,8 +146,7 @@
             var loop = true;
 
             function sleep() {
-                renderLoop();
-                //setInterval(renderLoop(), 100);
+                setInterval(renderLoop(), 100);
             }
             function renderLoop() 
             {
