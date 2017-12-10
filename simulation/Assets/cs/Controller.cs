@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 class Reward {
 	public float value;
@@ -117,6 +118,17 @@ class Environment {
 		this.observation = observation;
 	}
 
+	public void setText(Text gyroText, Text accelText) {
+		Vector3 gyroVector = new Vector3 (0, 0, 0);
+		Vector3 accelVector = new Vector3 (0, 0, 0);
+		if (observation != null) {
+			gyroVector = observation.nextState.gyro;
+			accelVector = observation.nextState.accel;
+		}
+		gyroText.text = "Gyro: X = " + gyroVector[2].ToString("F3") + "; Y = " + gyroVector[0].ToString("F3") + "; Z = " + gyroVector[1].ToString("F3");
+		accelText.text = "Accel: X = " + accelVector[0].ToString("F3") + "; Y = " + accelVector[1].ToString("F3") + "; Z = " + accelVector[2].ToString("F3");
+	}
+
 	public void reset() {
 		drone.transform.position = start_pos;
 		drone.transform.eulerAngles = start_rot;
@@ -131,6 +143,8 @@ public class Controller : MonoBehaviour {
 	public GameObject drone;
 	public GameObject r1, r2, b1, b2;
 	public float max_thrust = 0.6f;
+	public Text gyroText, accelText;
+
 	private float step = 0.1f;
 	private float[] thrust; // in grams
 	private Environment environment;
@@ -138,6 +152,7 @@ public class Controller : MonoBehaviour {
 
 	void Start () {
 		environment = new Environment (drone, r1, r2, b1, b2);
+		environment.setText (gyroText, accelText);
 		thrust = new float[4];
 		lastVelocity = new Vector3 (0, 0, 0);
 	}
@@ -160,6 +175,7 @@ public class Controller : MonoBehaviour {
 		);
 		// make an observation from the enviroment
 		environment.setObservation (observation);
+		environment.setText (gyroText, accelText);
 	}
 
 	void Update(bool f, GameObject obj, int i) {
