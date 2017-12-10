@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 class Reward {
 	public float value;
@@ -57,12 +58,17 @@ class Motor {
 	public float getThrust() {
 		return MAX_THRUST * percent;
 	}
+
+	public void reset() {
+		percent = 0.0f;
+	}
 }
 
 class Environment {
 	private GameObject drone;
 	private Motor r1, r2, b1, b2;
 	private Observation observation;
+	private Vector3 start_pos, start_rot;
 
 	public Environment(GameObject drone, GameObject r1, GameObject r2, GameObject b1, GameObject b2) {
 		this.drone = drone;
@@ -71,32 +77,34 @@ class Environment {
 		this.b1 = new Motor(b1);
 		this.b2 = new Motor(b2);
 		observation = null;
+		start_pos = drone.transform.position;
+		start_rot = drone.transform.eulerAngles;
 	}
 
 	public void step(Action action) {
-		switch (action.type) {
-		case Action.Type.CW1_INC:
+		switch (action) {
+		case Action.CW1_INC:
 			r1.increase ();
 			break;
-		case Action.Type.CW1_DEC:
+		case Action.CW1_DEC:
 			r1.decrease ();
 			break;
-		case Action.Type.CCW1_INC:
+		case Action.CCW1_INC:
 			b1.increase ();
 			break;
-		case Action.Type.CCW1_DEC:
+		case Action.CCW1_DEC:
 			b1.decrease ();
 			break;
-		case Action.Type.CW2_INC:
+		case Action.CW2_INC:
 			r2.increase ();
 			break;
-		case Action.Type.CW2_DEC:
+		case Action.CW2_DEC:
 			r2.decrease ();
 			break;
-		case Action.Type.CCW2_INC:
+		case Action.CCW2_INC:
 			b2.increase ();
 			break;
-		case Action.Type.CCW2_DEC:
+		case Action.CCW2_DEC:
 			b2.decrease ();
 			break;
 		}
@@ -109,20 +117,42 @@ class Environment {
 	public void setObservation(Observation observation) {
 		this.observation = observation;
 	}
+
+	public void setText(Text gyroText, Text accelText) {
+		Vector3 gyroVector = new Vector3 (0, 0, 0);
+		Vector3 accelVector = new Vector3 (0, 0, 0);
+		if (observation != null) {
+			gyroVector = observation.nextState.gyro;
+			accelVector = observation.nextState.accel;
+		}
+		gyroText.text = "Gyro: X = " + gyroVector[2].ToString("F3") + "; Y = " + gyroVector[0].ToString("F3") + "; Z = " + gyroVector[1].ToString("F3");
+		accelText.text = "Accel: X = " + accelVector[0].ToString("F3") + "; Y = " + accelVector[1].ToString("F3") + "; Z = " + accelVector[2].ToString("F3");
+	}
+
+	public void reset() {
+		drone.transform.position = start_pos;
+		drone.transform.eulerAngles = start_rot;
+		r1.reset ();
+		r2.reset ();
+		b1.reset ();
+		b2.reset ();
+	}
 }
 
 public class Controller : MonoBehaviour {
-
 	public GameObject drone;
 	public GameObject r1, r2, b1, b2;
 	public float max_thrust = 0.6f;
+	public Text gyroText, accelText;
+
 	private float step = 0.1f;
-	private float[] thrust; // in gram
+	private float[] thrust; // in grams
 	private Environment environment;
 	static Vector3 lastVelocity;
 
 	void Start () {
 		environment = new Environment (drone, r1, r2, b1, b2);
+		environment.setText (gyroText, accelText);
 		thrust = new float[4];
 		lastVelocity = new Vector3 (0, 0, 0);
 	}
@@ -143,12 +173,13 @@ public class Controller : MonoBehaviour {
 			new State(transform.eulerAngles, acceleration),
 			false
 		);
-		Debug.Log (acceleration);
 		// make an observation from the enviroment
 		environment.setObservation (observation);
+		environment.setText (gyroText, accelText);
 	}
 
 	void Update(bool f, GameObject obj, int i) {
+		// Keyboard Control
 		if (f) {
 			thrust [i] += step;
 			if (thrust [i] > max_thrust)
@@ -163,5 +194,12 @@ public class Controller : MonoBehaviour {
 			if (thrust [i] < 0)
 				thrust [i] = 0;
 		}
+	}
+
+	void reset() {
+		for (int i = 0; i < 4; ++i) {
+			thrust [i] = 0.0f;
+		}
+		environment.reset ();
 	}
 }
