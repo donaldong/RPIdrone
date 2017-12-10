@@ -38,12 +38,11 @@
         <script>
             function checkIP(){
                 var ip = "http://" + $("#address").val();
-                console.log(ip);
                 localStorage.address = ip;
                 $.ajax({
                     type:"GET",
                     url: ip,
-                    dataType: "html", success: function(data){ console.log(data);
+                    dataType: "html", success: function(data){ 
                         if(data){
                             $("#status").html("Connected");
                             $("#status").css("color", "green");
@@ -56,14 +55,13 @@
                 var obj = JSON.stringify({"percent":parseFloat($(motor).val()/1000000)});
                     xhttp.onreadystatechange = function(){
                         if(this.readyState == 4 && this.status == 202){
-                            console.log(this.responseText);
                         }
                     }
                     xhttp.open("POST", localStorage.address + "/speed/" + $(motor).attr("id"),true);
                     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
                     xhttp.send(obj);
             }
-            async function getGyro(){
+            function getGyro(){
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function(){
                     if(this.readyState == 4 && this.status == 202 || this.status == 200){
@@ -72,9 +70,9 @@
                             var alphaPrev = parseFloat($("#alpha").html());
                             var betaPrev = parseFloat($("#beta").html());
                             var gammaPrev = parseFloat($("#gamma").html());
-                            $("#alpha").html(alphaPrev + (response.x * .1));
-                            $("#beta").html(betaPrev + (response.y * .1));
-                            $("#gamma").html(gammaPrev + (response.z * .1));
+                            $("#alpha").html(alphaPrev + (response.z * .1));
+                            $("#beta").html(betaPrev + (response.x * .1));
+                            $("#gamma").html(gammaPrev + (response.y * .1));
                         }
                     }
                 }
