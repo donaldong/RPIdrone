@@ -46,7 +46,8 @@ class Controller(Flask):
         except:
             return Controller.ERR_MSG_MOTOR_NAME
         try:
-            post = request.get_json()
+            post = json.loads(request.form.keys()[0])
+            print(post)
             if "percent" in post:
                 motor.set_percentage(float(post["percent"]))
                 return Controller.SUCCESS_MSG_ACCEPTED

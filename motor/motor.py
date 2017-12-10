@@ -26,6 +26,7 @@ class Motor:
 
     def set_pulse_width(self, us):
         self.__width = min(self.__subcycle_time_us - self.__pulse_incr_us, us)
+        self.__width -= self.__width % self.__pulse_incr_us
         self.__servo.set_servo(self.__gpio, self.__width)
 
     def set_percentage(self, percent):
