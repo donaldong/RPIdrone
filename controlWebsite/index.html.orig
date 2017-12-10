@@ -8,7 +8,7 @@
     </head>
     <body>
         <div id='ipcheck' class='child'>
-            <input type="text" id="address" placeholder='IP Address' value="192.168.43.174"/>
+            <input type="text" id="address" placeholder='IP Address' value="10.0.1.3"/>
             <input type="submit" id='submit' value='Connect'/>
             <span>Status: </span><span id='status'>Not Connected</span>
         </div>
@@ -71,12 +71,15 @@
                             var alphaPrev = parseFloat($("#alpha").html());
                             var betaPrev = parseFloat($("#beta").html());
                             var gammaPrev = parseFloat($("#gamma").html());
+<<<<<<< HEAD
                             $("#alpha").html(alphaPrev + response.x * r);
                             $("#beta").html(betaPrev + response.y * r);
                             $("#gamma").html(gammaPrev + response.z * r);
+=======
                             $("#alpha").html(alphaPrev + (response.y * .1));
                             $("#beta").html(betaPrev + (response.x * .1));
                             $("#gamma").html(gammaPrev + (response.z * .1));
+>>>>>>> dee58dfdfeda72a6449dbf4a62905f1c32aa0684
                         }
                     }
                 }
