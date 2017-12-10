@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -130,6 +130,17 @@ class Environment {
 		this.observation = observation;
 	}
 
+	public void setText(Text gyroText, Text accelText) {
+		Vector3 gyroVector = new Vector3 (0, 0, 0);
+		Vector3 accelVector = new Vector3 (0, 0, 0);
+		if (observation != null) {
+			gyroVector = observation.nextState.gyro;
+			accelVector = observation.nextState.accel;
+		}
+		gyroText.text = "Gyro: X = " + gyroVector[2].ToString("F3") + "; Y = " + gyroVector[0].ToString("F3") + "; Z = " + gyroVector[1].ToString("F3");
+		accelText.text = "Accel: X = " + accelVector[0].ToString("F3") + "; Y = " + accelVector[1].ToString("F3") + "; Z = " + accelVector[2].ToString("F3");
+	}
+
 	public void reset() {
 		drone.transform.position = start_pos;
 		drone.transform.eulerAngles = start_rot;
@@ -152,11 +163,14 @@ public class Controller : MonoBehaviour {
 	public GameObject drone;
 	public GameObject r1, r2, b1, b2;
 	public float max_thrust = 0.6f;
-    public static float learningRate = 0.5f;
-    public static float epsilon = 0.2f;
-    public static float discountFactor = 0.9f;
+<<<<<<< HEAD
+	public static float learningRate = 0.5f;
+	public static float epsilon = 0.2f;
+	public static float discountFactor = 0.9f;
+=======
 	public Text gyroText, accelText;
 
+>>>>>>> d56a33a215e8e2276a96bb4eed412876a961f49b
 	private float step = 0.1f;
 	private float[] thrust; // in grams
 	private Environment environment;
@@ -164,7 +178,7 @@ public class Controller : MonoBehaviour {
 
 	void Start () {
 		environment = new Environment (drone, r1, r2, b1, b2);
-		setText ();
+		environment.setText (gyroText, accelText);
 		thrust = new float[4];
 		lastVelocity = new Vector3 (0, 0, 0);
 	}
@@ -195,6 +209,14 @@ public class Controller : MonoBehaviour {
 		Observation prev = environment.observe();
 		double td_delta = Policy.getQ(prev.state, environment.getLastAction ());
 		environment.setObservation (observation);
+<<<<<<< HEAD
+		double value = Policy.getQ(observation.state, environment.getAction ());
+		double td_target = observation.reward.getValue () + discountFactor * value;
+		td_delta = td_target - td_delta;
+		Policy.setQ(observation.state, environment.getAction (), learningRate * td_delta);
+=======
+		environment.setText (gyroText, accelText);
+>>>>>>> d56a33a215e8e2276a96bb4eed412876a961f49b
 	}
 
 	void Update(bool f, GameObject obj, int i) {
@@ -214,15 +236,6 @@ public class Controller : MonoBehaviour {
 				thrust [i] = 0;
 		}
 	}
-
-    public void setText() {
-        Vector3 gyroVector = new Vector3 (0, 0, 0);
-        Vector3 accelVector = new Vector3 (0, 0, 0);
-		gyroVector = environment.observe().state.gyro;
-		accelVector = environment.observe().state.accel;
-        gyroText.text = "Gyro: X = " + gyroVector[2].ToString("F3") + "; Y = " + gyroVector[0].ToString("F3") + "; Z = " + gyroVector[1].ToString("F3");
-        accelText.text = "Accel: X = " + accelVector[0].ToString("F3") + "; Y = " + accelVector[1].ToString("F3") + "; Z = " + accelVector[2].ToString("F3");
-    }
 
 	void reset() {
 		for (int i = 0; i < 4; ++i) {
