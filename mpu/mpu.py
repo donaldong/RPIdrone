@@ -18,10 +18,10 @@ class MPU:
         if self.__gyro_count < self.CALIBRATION:
             self.__add(self.__gyro_offset, data)
             self.__gyro_count += 1
+            if self.__gyro_count == self.CALIBRATION:
+                self.__div(self.__gyro_offset, self.CALIBRATION)
             return self.ZERO
-        data["x"] -= self.__gyro_offset["x"] / self.CALIBRATION
-        data["y"] -= self.__gyro_offset["y"] / self.CALIBRATION
-        data["z"] -= self.__gyro_offset["z"] / self.CALIBRATION
+        self.__sub(data, self.__gyro_offset) 
         return data
 
     def accel(self):
@@ -51,3 +51,8 @@ class MPU:
         a["y"] -= b["y"]
         a["z"] -= b["z"]
 
+    @staticmethod
+    def __div(a, b):
+        a["x"] /= b
+        a["y"] /= b
+        a["z"] /= b
