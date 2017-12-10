@@ -1,5 +1,4 @@
 from mpu6050 import mpu6050
-from collections import deque
 import copy
 
 class MPU:
@@ -8,19 +7,21 @@ class MPU:
     CALIBRATION = 100
     
     def __init__(self):
-        self.__gyro = deque()
-        self.__accel = deque()
+        self.__gyro_offset = self.__zero()
+        self.__gyro_count = 0
+        self.__accel_offset = self.__zero()
+        self.__accel_count = 0 
         self.__sensor = mpu6050(self.ADDRESS)
 
     def gyro(self):
         data = self.__sensor.get_gyro_data() 
-        if len(self.__gyro) < self.CALIBRATION:
-            self.__gyro.append(data)
-            return self.__average(self.__gyro)
-        avg = self.__average(self.__gyro)
-        self.__gyro.popleft()
-        self.__gyro.append(copy.deepcopy(data))
-        self.__sub(data, avg)
+        if self.__gyro_count < self.CALIBRATION:
+            self.__add(self.__gyro_offset, data)
+            self.__gyro_count += 1
+            return self.ZERO
+        data["x"] -= self.__gyro_offset["x"] / self.CALIBRATION
+        data["y"] -= self.__gyro_offset["y"] / self.CALIBRATION
+        data["z"] -= self.__gyro_offset["z"] / self.CALIBRATION
         return data
 
     def accel(self):
@@ -49,13 +50,4 @@ class MPU:
         a["x"] -= b["x"]
         a["y"] -= b["y"]
         a["z"] -= b["z"]
-
-    def __average(self, data):
-        res = self.__zero()
-        for d in data:
-            self.__add(res, d)
-        res["x"] /= len(data)
-        res["y"] /= len(data)
-        res["z"] /= len(data)
-        return res
 
