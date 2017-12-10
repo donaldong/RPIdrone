@@ -125,8 +125,8 @@ class Environment {
 			gyroVector = observation.nextState.gyro;
 			accelVector = observation.nextState.accel;
 		}
-		gyroText.text = "Gyro: X = " + gyroVector[2].ToString("F3") + "; Y = " + gyroVector[0].ToString("F3") + "; Z = " + gyroVector[1].ToString("F3");
-		accelText.text = "Accel: X = " + accelVector[0].ToString("F3") + "; Y = " + accelVector[1].ToString("F3") + "; Z = " + accelVector[2].ToString("F3");
+		gyroText.text = "X = " + gyroVector[2].ToString("F3") + "\nY = " + gyroVector[0].ToString("F3") + "\nZ = " + gyroVector[1].ToString("F3");
+		accelText.text = "X = " + accelVector[0].ToString("F3") + "\nY = " + accelVector[1].ToString("F3") + "\nZ = " + accelVector[2].ToString("F3");
 	}
 
 	public void reset() {
