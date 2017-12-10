@@ -8,7 +8,7 @@
     </head>
     <body>
         <div id='ipcheck' class='child'>
-            <input type="text" id="address" placeholder='IP Address' value="192.168.43.174"/>
+            <input type="text" id="address" placeholder='IP Address' value="10.0.1.3"/>
             <input type="submit" id='submit' value='Connect'/>
             <span>Status: </span><span id='status'>Not Connected</span>
         </div>
@@ -61,6 +61,7 @@
                     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
                     xhttp.send(obj);
             }
+            var r = 1.0 / 2.0 / 180.0 * 3.1415926535897932384626433832795028841971693993751;
             function getGyro(){
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function(){
@@ -70,9 +71,9 @@
                             var alphaPrev = parseFloat($("#alpha").html());
                             var betaPrev = parseFloat($("#beta").html());
                             var gammaPrev = parseFloat($("#gamma").html());
-                            $("#alpha").html(alphaPrev + (response.z * .1));
-                            $("#beta").html(betaPrev + (response.x * .1));
-                            $("#gamma").html(gammaPrev + (response.y * .1));
+                            $("#alpha").html(alphaPrev + response.x * r);
+                            $("#beta").html(betaPrev + response.y * r);
+                            $("#gamma").html(gammaPrev + response.z * r);
                         }
                     }
                 }
@@ -140,16 +141,17 @@
             var cube=makeRect(canvas.width/5,canvas.width/5,canvas.width/5);
             cube.color="purple";
             var xAxis=makeRect(440,10,10);
-            xAxis.color="green";
+            xAxis.color="red";
             var yAxis=makeRect(10,440,10);
-            yAxis.color="red";
+            yAxis.color="green";
             var zAxis=makeRect(10,10,440);
             zAxis.color="blue";
             //render loop
             var loop = true;
 
             function sleep(){
-                setInterval(renderLoop(), 100);
+		renderLoop();
+                //setInterval(renderLoop(), 100);
             }
             function renderLoop() 
             {
