@@ -8,6 +8,10 @@ class Reward {
 	public Reward(float value) {
 		this.value = value;
 	}
+
+	public float getValue() {
+		return value;
+	}
 }
 
 class State {
@@ -22,12 +26,12 @@ class State {
 
 class Observation {
 	public Reward reward;
-	public State nextState;
+	public State state;
 	public bool done;
 
-	public Observation(Reward reward, State nextState, bool done) {
+	public Observation(Reward reward, State state, bool done) {
 		this.reward = reward;
-		this.nextState = nextState;
+		this.state = state;
 		this.done = done;
 	}
 }
@@ -66,8 +70,10 @@ class Motor {
 class Environment {
 	private GameObject drone;
 	private Motor r1, r2, b1, b2;
+	private State state;
 	private Observation observation;
 	private Vector3 start_pos, start_rot;
+	private Action current, last;
 
 	public Environment(GameObject drone, GameObject r1, GameObject r2, GameObject b1, GameObject b2) {
 		this.drone = drone;
@@ -75,7 +81,11 @@ class Environment {
 		this.r2 = new Motor(r2);
 		this.b1 = new Motor(b1);
 		this.b2 = new Motor(b2);
-		observation = null;
+		observation = new Observation (
+			new Reward(0),
+			new State (start_rot, new Vector3 (0, 0, 0)),
+			false
+		);
 		start_pos = drone.transform.position;
 		start_rot = drone.transform.eulerAngles;
 	}
@@ -107,6 +117,8 @@ class Environment {
 			b2.decrease ();
 			break;
 		}
+		last = current;
+		current = action;
 	}
 
 	public Observation observe() {
@@ -125,12 +137,23 @@ class Environment {
 		b1.reset ();
 		b2.reset ();
 	}
+
+	public Action getAction() {
+		return current;
+	}
+
+	public Action getLastAction() {
+		return last;
+	}
 }
 
 public class Controller : MonoBehaviour {
 	public GameObject drone;
 	public GameObject r1, r2, b1, b2;
 	public float max_thrust = 0.6f;
+	public static float learningRate = 0.5f;
+	public static float epsilon = 0.2f;
+	public static float discountFactor = 0.9f;
 	private float step = 0.1f;
 	private float[] thrust; // in grams
 	private Environment environment;
@@ -147,6 +170,12 @@ public class Controller : MonoBehaviour {
 		Update (Input.GetKey (KeyCode.S), b1, 1);
 		Update (Input.GetKey (KeyCode.D), r2, 2);
 		Update (Input.GetKey (KeyCode.F), b2, 3);
+		if (Input.GetKeyDown (KeyCode.R))
+			reset ();
+		environment.step (Policy.epsilon_greedy_policy (
+			environment.observe().state,
+			epsilon
+		));
 	}
 
 	void LateUpdate() {
@@ -159,7 +188,13 @@ public class Controller : MonoBehaviour {
 			false
 		);
 		// make an observation from the enviroment
+		Observation prev = environment.observe();
+		double td_delta = Policy.getQ(prev.state, environment.getLastAction ());
 		environment.setObservation (observation);
+		double value = Policy.getQ(observation.state, environment.getAction ());
+		double td_target = observation.reward.getValue () + discountFactor * value;
+		td_delta = td_target - td_delta;
+		Policy.setQ(observation.state, environment.getAction (), learningRate * td_delta);
 	}
 
 	void Update(bool f, GameObject obj, int i) {
