@@ -7,13 +7,14 @@
         <link rel='stylesheet' href='css/styles.css'>
     </head>
     <body>
+        <h1 class="jumbotron"> Drone Controller</h1>
         <div id='ipcheck' class='child'>
             <input type="text" id="address" placeholder='IP Address' value="10.0.1.3"/>
-            <input type="submit" id='submit' value='Connect'/>
+            <input type="submit" class="btn btn-success" id='submit' value='Connect'/>
             <span>Status: </span><span id='status'>Not Connected</span>
         </div>
         <br>
-        <h1> Speed Controls</h1>
+        <h3> Speed Controls</h3>
         <div id='controlboard'>
                 <div id='controlnames'>
                     <h4>Red CW1</h4>
@@ -27,7 +28,7 @@
                     <input type="range" min="0" max="1000000" value="0" class="slider" id="black_ccw_1"><p>Speed: </p><p id='black_ccw_1p'>0%</p><br>
                     <input type="range" min="0" max="1000000" value="0" class="slider" id="black_ccw_2"><p>Speed: </p><p id='black_ccw_2p'>0%</p>
                 </div><br>
-                <button id="gyroButton">Get Gyro</button>
+                <button class="btn btn-info" id="gyroButton">Get Gyro</button>
                 <br>
                 alpha:<span id="alpha">0</span><br>
                 beta:<span id="beta">0</span><br>

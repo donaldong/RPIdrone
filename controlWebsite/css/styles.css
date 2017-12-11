@@ -1,9 +1,14 @@
 h1{
     text-align: center;
+    font-size: 6em;
 }
 h4{
     text-align: left;
     margin-bottom: 10px !important;
+}
+h3{
+    text-align: center;
+    font-size: 3em
 }
 #controlboard{
     text-align: center;
@@ -66,4 +71,7 @@ canvas{
     margin: 0px;
     width: 100%;
     height: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: -10;
 }
