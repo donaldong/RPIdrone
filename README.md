@@ -1,4 +1,9 @@
 # RPIdrone
+
+### Authors
+- Donald Dong, Drone Simulation
+- Christopher Forsythe, Drone Controller
+- Brandon Mendel, Drone Simulation
 ### Introduction
 - RPI pin [layout](https://www.jameco.com/Jameco/workshop/circuitnotes/raspberry_pi_circuit_note_fig2a.jpg).
 - Gyro + Accelerometer [MPU-6050](http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html) and
