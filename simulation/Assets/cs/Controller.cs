@@ -147,7 +147,7 @@ class Environment {
 	public void setObservation(Observation observation) {
 		this.observation = observation;
 	}
-
+  
 	public void reset() {
 		drone.transform.position = start_pos;
 		drone.transform.eulerAngles = start_rot;
@@ -234,15 +234,16 @@ public class Controller : MonoBehaviour {
 				thrust [i] = 0;
 		}
 	}
-
-    public void setText() {
-        Vector3 gyroVector = new Vector3 (0, 0, 0);
-        Vector3 accelVector = new Vector3 (0, 0, 0);
-		gyroVector = environment.observe().state.gyro;
-		accelVector = environment.observe().state.accel;
-        gyroText.text = "Gyro: X = " + gyroVector[2].ToString("F3") + "; Y = " + gyroVector[0].ToString("F3") + "; Z = " + gyroVector[1].ToString("F3");
-        accelText.text = "Accel: X = " + accelVector[0].ToString("F3") + "; Y = " + accelVector[1].ToString("F3") + "; Z = " + accelVector[2].ToString("F3");
-    }
+	public void setText() {
+		Vector3 gyroVector = new Vector3 (0, 0, 0);
+		Vector3 accelVector = new Vector3 (0, 0, 0);
+		if (observation != null) {
+			gyroVector = observation.nextState.gyro;
+			accelVector = observation.nextState.accel;
+		}
+		gyroText.text = "X = " + gyroVector[2].ToString("F3") + "\nY = " + gyroVector[0].ToString("F3") + "\nZ = " + gyroVector[1].ToString("F3");
+		accelText.text = "X = " + accelVector[0].ToString("F3") + "\nY = " + accelVector[1].ToString("F3") + "\nZ = " + accelVector[2].ToString("F3");
+	}
 
 	void reset() {
 		for (int i = 0; i < 4; ++i) {
