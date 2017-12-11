@@ -4,6 +4,8 @@
 - [Donald Dong](https://www.linkedin.com/in/xdonaldong/), Drone Simulation
 - [Christopher Forsythe](https://www.linkedin.com/in/ccforsythe/), Drone Controller
 - Brandon Mendel, Drone Simulation
+### Abstract
+- Used Drone Simulation in combination with reenforcement learning to autobalance a drone
 ### Introduction
 - RPI pin [layout](https://www.jameco.com/Jameco/workshop/circuitnotes/raspberry_pi_circuit_note_fig2a.jpg).
 - Gyro + Accelerometer [MPU-6050](http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html) and
