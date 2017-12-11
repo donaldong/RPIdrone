@@ -1,7 +1,7 @@
 # RPIdrone
 
 ### Authors
-- Donald Dong, Drone Simulation
+- [Donald Dong](https://www.linkedin.com/in/xdonaldong/), Drone Simulation
 - [Christopher Forsythe](https://www.linkedin.com/in/ccforsythe/), Drone Controller
 - Brandon Mendel, Drone Simulation
 ### Introduction
