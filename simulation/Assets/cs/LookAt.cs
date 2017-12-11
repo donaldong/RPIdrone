@@ -13,7 +13,8 @@ public class LookAt : MonoBehaviour {
 	void LateUpdate() {
 		float desiredAngle = target.transform.eulerAngles.y;
 		Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
-		transform.position = target.transform.position - (rotation * offset);
+//		transform.position = target.transform.position - (rotation * offset);
+		transform.position = target.transform.position - offset;
 		transform.LookAt(target.transform);
 	}
 }

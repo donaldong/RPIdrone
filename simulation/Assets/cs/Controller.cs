@@ -182,6 +182,10 @@ class Environment {
 		r2.addForce ();
 		b1.addForce ();
 		b2.addForce ();
+		drone.GetComponent<Rigidbody> ().AddTorque (new Vector3(0, r1.getThrust(), 0));
+		drone.GetComponent<Rigidbody> ().AddTorque (new Vector3(0, r2.getThrust(), 0));
+		drone.GetComponent<Rigidbody> ().AddTorque (new Vector3(0, -b1.getThrust(), 0));
+		drone.GetComponent<Rigidbody> ().AddTorque (new Vector3(0, -b2.getThrust(), 0));
 	}
 
 	public Observation observe() {
