@@ -2,7 +2,7 @@
 
 ### Authors
 - Donald Dong, Drone Simulation
-- Christopher Forsythe, Drone Controller
+- [Christopher Forsythe](https://www.linkedin.com/in/ccforsythe/), Drone Controller
 - Brandon Mendel, Drone Simulation
 ### Introduction
 - RPI pin [layout](https://www.jameco.com/Jameco/workshop/circuitnotes/raspberry_pi_circuit_note_fig2a.jpg).
