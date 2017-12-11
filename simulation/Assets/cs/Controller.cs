@@ -120,6 +120,9 @@ class Environment {
 	private Observation observation;
 	private Vector3 start_pos, start_rot;
 	private Action current, last;
+	public static float MAXHEIGHT;
+	public static float CUTOFF;
+	public bool end_cut = false;
 
 	public Environment(GameObject drone, GameObject r1, GameObject r2, GameObject b1, GameObject b2) {
 		this.drone = drone;
@@ -204,13 +207,12 @@ class Environment {
 
 	public bool end() {
 		var diff = getDiff (drone.transform);
-		if (diff.magnitude > 0.5)
+		if (diff.magnitude > CUTOFF) {
+			end_cut = true;
 			return true;
-		if (drone.transform.position.y >= 10.0f)
-			return true;
-		if (drone.transform.position.x >= 150.0f || drone.transform.position.x <= -150.0f)
-			return true;
-		if (drone.transform.position.z >= 150.0f || drone.transform.position.z <= -150.0f)
+		}
+		end_cut = false;
+		if (drone.transform.position.y >= MAXHEIGHT)
 			return true;
 		return false;
 	}
@@ -224,6 +226,9 @@ public class Controller : MonoBehaviour {
     public float epsilon = 0.2f;
     public float discountFactor = 0.9f;
 	public int maxEpisodeLength = 1000000;
+	public float maxHeight = 50.0f;
+	public float cutOff = 0.5f;
+	public float cutOffPenalty = 100.0f;
 	public Text gyroText, accelText, episodeText;
 	private int step_count = 0;
 	private int episode = 1;
@@ -234,6 +239,8 @@ public class Controller : MonoBehaviour {
 
 	void Start () {
 		Motor.MAX_THRUST = max_thrust;
+		Environment.MAXHEIGHT = maxHeight;
+		Environment.CUTOFF = cutOff;
 		environment = new Environment (drone, r1, r2, b1, b2);
 		setText ();
 		thrust = new float[4];
@@ -260,11 +267,18 @@ public class Controller : MonoBehaviour {
 		Rigidbody rigidbody = drone.GetComponent<Rigidbody> ();
 		Vector3 acceleration = (rigidbody.velocity - lastVelocity) / Time.fixedDeltaTime;
 		lastVelocity = rigidbody.velocity;
-		Observation observation = new Observation (
-			new Reward(Environment.getDiff(transform), acceleration),
-			new State(transform.eulerAngles, acceleration),
-			false
-		);
+		Observation observation;
+		if (!environment.end_cut) {
+			observation = new Observation (
+				new Reward (Environment.getDiff (transform), acceleration),
+				new State (transform.eulerAngles, acceleration),
+				false);
+		} else {
+			observation = new Observation (
+				new Reward (-cutOffPenalty),
+				new State (transform.eulerAngles, acceleration),
+				false);
+		}
 		// make an observation from the enviroment
 		Observation prev = environment.observe();
 		double td_delta = Policy.getQ(prev.state, environment.getLastAction ());
