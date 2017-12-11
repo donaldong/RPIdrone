@@ -1,7 +1,7 @@
 from flask import *
 from flask_api import status
 from motor import Motor
-from mpu6050 import mpu6050
+from mpu import MPU
 import json
 
 
@@ -17,7 +17,7 @@ class Controller(Flask):
         self.__motors["black_ccw_1"] = Motor(6, "black_ccw_1")
         self.__motors["red_cw_2"] = Motor(13, "red_cw_2")
         self.__motors["black_ccw_2"] = Motor(19, "black_ccw_2")
-        self.__mpu = mpu6050(0x68)
+        self.__mpu = MPU()
         # Define control routes
         self.add_url_rule("/", view_func=self.view_root, methods=["GET"])
         self.add_url_rule("/accel", view_func=self.view_accel, methods=["GET"])
@@ -29,10 +29,10 @@ class Controller(Flask):
         return Controller.SUCCESS_MSG_ACCEPTED
 
     def view_gyro(self):
-        return json.dumps(self.__mpu.get_gyro_data())
+        return json.dumps(self.__mpu.gyro())
 
     def view_accel(self):
-        return json.dumps(self.__mpu.get_accel_data())
+        return json.dumps(self.__mpu.accel())
 
     def view_motor(self, name):
         try:
@@ -46,7 +46,8 @@ class Controller(Flask):
         except:
             return Controller.ERR_MSG_MOTOR_NAME
         try:
-            post = request.get_json()
+            post = json.loads(request.form.keys()[0])
+            print(post)
             if "percent" in post:
                 motor.set_percentage(float(post["percent"]))
                 return Controller.SUCCESS_MSG_ACCEPTED
