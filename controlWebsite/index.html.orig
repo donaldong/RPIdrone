@@ -9,8 +9,13 @@
     <body>
         <h1 class="jumbotron"> Drone Controller</h1>
         <div id='ipcheck' class='child'>
+<<<<<<< HEAD
+            <input type="text" id="address" placeholder='IP Address' value="192.168.43.174"/>
+            <input type="submit" id='submit' value='Connect'/>
+=======
             <input type="text" id="address" placeholder='IP Address' value="10.0.1.3"/>
             <input type="submit" class="btn btn-success" id='submit' value='Connect'/>
+>>>>>>> 397f8f2b5233e2f3765e04f56a0415b5f8aadcb4
             <span>Status: </span><span id='status'>Not Connected</span>
         </div>
         <br>
