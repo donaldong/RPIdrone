@@ -12,7 +12,7 @@ class Reward {
 	}
 
 	public Reward(Vector3 diff, Vector3 accel) {
-		this.value = -diff.magnitude * 2 -  accel.magnitude;
+		this.value = -diff.magnitude * 2;
 	}
 
 	public float getValue() {
@@ -38,6 +38,15 @@ class State : IEquatable<State> {
 		return res;
 	}
 
+	public int getHashGyro2() {
+		int res = Convert.ToInt32(gyro.x);
+		res <<= 10;
+		res += Convert.ToInt32(gyro.y);
+		res <<= 10;
+		res += Convert.ToInt32(gyro.z);
+		return res;
+	}
+
 	public int getHashAccel() {
 		int res = Convert.ToInt32(accel.x / 7.0f);
 		res <<= 4;
@@ -48,8 +57,9 @@ class State : IEquatable<State> {
 	}
 
 	public override int GetHashCode() {
-		int gyroHash = getHashGyro ();
-		return gyroHash << 18 + getHashAccel();
+		return getHashGyro2();
+		//int gyroHash = getHashGyro ();
+		//return gyroHash << 18 + getHashAccel();
 	}
 
 	public override bool Equals(object obj) {
@@ -183,6 +193,7 @@ class Environment {
 	}
   
 	public void reset() {
+		Debug.Log (drone.transform.position.y);
 		drone.transform.position = start_pos;
 		drone.transform.eulerAngles = start_rot;
 		drone.GetComponent<Rigidbody> ().velocity = Vector3.zero;
@@ -226,10 +237,10 @@ public class Controller : MonoBehaviour {
     public float epsilon = 0.2f;
     public float discountFactor = 0.9f;
 	public int maxEpisodeLength = 1000000;
-	public float maxHeight = 50.0f;
-	public float cutOff = 0.5f;
+	public float maxHeight = 500.0f;
+	public float cutOff = 0.7f;
 	public float cutOffPenalty = 100.0f;
-	public Text gyroText, accelText, episodeText;
+	public Text gyroText, accelText, episodeText, stateText;
 	private int step_count = 0;
 	private int episode = 1;
 	private float step = 0.1f;
@@ -316,6 +327,7 @@ public class Controller : MonoBehaviour {
 		gyroText.text = "X = " + gyroVector[2].ToString("F3") + "\nY = " + gyroVector[0].ToString("F3") + "\nZ = " + gyroVector[1].ToString("F3");
 		accelText.text = "X = " + accelVector[0].ToString("F3") + "\nY = " + accelVector[1].ToString("F3") + "\nZ = " + accelVector[2].ToString("F3");
 		episodeText.text = episode.ToString();
+		stateText.text = Policy.stateCount().ToString ();
 	}
 
 	void reset() {

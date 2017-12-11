@@ -61,7 +61,6 @@ class Policy {
 		}
 		probs [(int)actionValues.bestAction ()] = 1.0 - epsilon + epsilon / nA;
 		Action action = randomChoice (probs);
-		Debug.Log (action);
 		return action;
 	}
 
@@ -95,5 +94,9 @@ class Policy {
 			Q.Add(state, new ActionValues ());
 			Q[state].setValue (action, value);
 		}
+	}
+
+	public static int stateCount() {
+		return Q.Count;
 	}
 }
