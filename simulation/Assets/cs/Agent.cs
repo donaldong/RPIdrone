@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,11 +60,13 @@ class Policy {
 			Q.Add(state, actionValues); 
 		}
 		probs [(int)actionValues.bestAction ()] = 1.0 - epsilon + epsilon / nA;
-		return randomChoice(probs);
+		Action action = randomChoice (probs);
+		Debug.Log (action);
+		return action;
 	}
 
 	public static Action randomChoice(ArrayList p) {
-		Random r = new Random();
+		System.Random r = new System.Random();
 		double diceRoll = r.NextDouble();
 		double cumulative = 0.0;
 		for (int i = 0; i < nA; i++)

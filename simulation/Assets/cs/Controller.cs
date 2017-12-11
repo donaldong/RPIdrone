@@ -10,6 +10,12 @@ class Reward {
 		this.value = value;
 	}
 
+	public Reward(Vector3 eulerAngle) {
+		var up = new Vector3 (0, 1, 0);
+		var diff = up - eulerAngle;
+		this.value = -diff.magnitude;
+	}
+
 	public float getValue() {
 		return value;
 	}
@@ -38,13 +44,13 @@ class Observation {
 }
 
 class Motor {
-	public const float MAX_THRUST = 0.6f;
+	public static float MAX_THRUST;
 	private GameObject obj;
 	private float percent;
 
 	public Motor(GameObject obj) {
 		this.obj = obj;
-		percent = 0.0f;
+		percent = 1.0f;
 	}
 
 	public void increase() {
@@ -59,12 +65,20 @@ class Motor {
 			percent = 0.0f;
 	}
 
+	public void addForce() {
+		Vector3 force = percent * MAX_THRUST * Physics.gravity;
+		force.y *= -1;
+		obj.GetComponent<Rigidbody> ().AddForce (
+			obj.transform.rotation * force);
+	}
+
 	public float getThrust() {
 		return MAX_THRUST * percent;
 	}
 
 	public void reset() {
-		percent = 0.0f;
+		percent = 1.0f;
+		obj.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 	}
 }
 
@@ -120,6 +134,10 @@ class Environment {
 		}
 		last = current;
 		current = action;
+		r1.addForce ();
+		r2.addForce ();
+		b1.addForce ();
+		b2.addForce ();
 	}
 
 	public Observation observe() {
@@ -133,6 +151,7 @@ class Environment {
 	public void reset() {
 		drone.transform.position = start_pos;
 		drone.transform.eulerAngles = start_rot;
+		drone.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 		r1.reset ();
 		r2.reset ();
 		b1.reset ();
@@ -163,6 +182,7 @@ public class Controller : MonoBehaviour {
 	static Vector3 lastVelocity;
 
 	void Start () {
+		Motor.MAX_THRUST = max_thrust;
 		environment = new Environment (drone, r1, r2, b1, b2);
 		setText ();
 		thrust = new float[4];
@@ -187,7 +207,7 @@ public class Controller : MonoBehaviour {
 		Vector3 acceleration = (rigidbody.velocity - lastVelocity) / Time.fixedDeltaTime;
 		lastVelocity = rigidbody.velocity;
 		Observation observation = new Observation (
-			new Reward(0),
+			new Reward(transform.eulerAngles),
 			new State(transform.eulerAngles, acceleration),
 			false
 		);
