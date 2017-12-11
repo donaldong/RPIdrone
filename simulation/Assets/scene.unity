@@ -548,56 +548,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 54556192599291288, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 54148920311159676, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54157873895685102, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54298019151178812, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54018694641684890, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54512942955483664, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54888936512896622, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54760598247125252, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 54722059267075150, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114215299093749650, guid: 075ca45f7f01340b0aaecbcb01e6907f,
-        type: 2}
-      propertyPath: max_thrust
-      value: 0.6
-      objectReference: {fileID: 0}
     - target: {fileID: 114215299093749650, guid: 075ca45f7f01340b0aaecbcb01e6907f,
         type: 2}
       propertyPath: gyroText

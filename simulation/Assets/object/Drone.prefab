@@ -651,7 +651,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -666,7 +666,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -681,7 +681,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -696,7 +696,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -711,7 +711,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -741,7 +741,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -756,7 +756,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -771,7 +771,7 @@ Rigidbody:
   m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -888,7 +888,22 @@ MonoBehaviour:
   r2: {fileID: 1648360438192706}
   b1: {fileID: 1332984496409244}
   b2: {fileID: 1520579548891454}
-  max_thrust: 1.2
+  axis_r1: {fileID: 1249039942606584}
+  axis_r2: {fileID: 1617469538218202}
+  axis_b1: {fileID: 1662138574481214}
+  axis_b2: {fileID: 1092653841901646}
+  max_thrust: 0.6
+  learningRate: 0.5
+  epsilon: 0.2
+  discountFactor: 0.9
+  maxEpisodeLength: 1000000
+  maxHeight: 50000
+  cutOff: 0.7
+  cutOffPenalty: 100
+  gyroText: {fileID: 0}
+  accelText: {fileID: 0}
+  episodeText: {fileID: 0}
+  stateText: {fileID: 0}
 --- !u!138 &138045842384269520
 FixedJoint:
   m_ObjectHideFlags: 1

@@ -124,7 +124,7 @@ class Motor {
 }
 
 class Environment {
-	private GameObject drone;
+	private GameObject drone, axis_r1, axis_r2, axis_b1, axis_b2;
 	private Motor r1, r2, b1, b2;
 	private State state;
 	private Observation observation;
@@ -134,12 +134,17 @@ class Environment {
 	public static float CUTOFF;
 	public bool end_cut = false;
 
-	public Environment(GameObject drone, GameObject r1, GameObject r2, GameObject b1, GameObject b2) {
+	public Environment(GameObject drone, GameObject r1, GameObject r2, GameObject b1, GameObject b2,
+		GameObject axis_r1, GameObject axis_r2, GameObject axis_b1, GameObject axis_b2) {
 		this.drone = drone;
 		this.r1 = new Motor(r1);
 		this.r2 = new Motor(r2);
 		this.b1 = new Motor(b1);
 		this.b2 = new Motor(b2);
+		this.axis_r1 = axis_r1;
+		this.axis_r2 = axis_r2;
+		this.axis_b1 = axis_b1;
+		this.axis_b2 = axis_b2;
 		observation = new Observation (
 			new Reward(0),
 			new State (start_rot, Vector3.zero),
@@ -202,6 +207,14 @@ class Environment {
 		drone.transform.eulerAngles = start_rot;
 		drone.GetComponent<Rigidbody> ().velocity = Vector3.zero;
 		drone.GetComponent<Rigidbody> ().angularVelocity = Vector3.zero;
+		axis_r1.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		axis_r1.GetComponent<Rigidbody> ().angularVelocity = Vector3.zero;
+		axis_r2.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		axis_r2.GetComponent<Rigidbody> ().angularVelocity = Vector3.zero;
+		axis_b1.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		axis_b1.GetComponent<Rigidbody> ().angularVelocity = Vector3.zero;
+		axis_b2.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		axis_b2.GetComponent<Rigidbody> ().angularVelocity = Vector3.zero;
 		r1.reset ();
 		r2.reset ();
 		b1.reset ();
@@ -236,6 +249,7 @@ class Environment {
 public class Controller : MonoBehaviour {
 	public GameObject drone;
 	public GameObject r1, r2, b1, b2;
+	public GameObject axis_r1, axis_r2, axis_b1, axis_b2;
 	public float max_thrust = 0.6f;
     public float learningRate = 0.5f;
     public float epsilon = 0.2f;
@@ -256,7 +270,7 @@ public class Controller : MonoBehaviour {
 		Motor.MAX_THRUST = max_thrust;
 		Environment.MAXHEIGHT = maxHeight;
 		Environment.CUTOFF = cutOff;
-		environment = new Environment (drone, r1, r2, b1, b2);
+		environment = new Environment (drone, r1, r2, b1, b2, axis_r1, axis_r2, axis_b1, axis_b2);
 		setText ();
 		thrust = new float[4];
 		lastVelocity = new Vector3 (0, 0, 0);
