@@ -21,12 +21,14 @@
                     <h4>Red CW2</h4>
                     <h4>Black CCW1</h4>
                     <h4>Black CCW2</h4>
+                    <h4>All Motors</h4>
                 </div>
                 <div id='controls'>
                     <input type="range" min="0" max="1000000" value="0" class="slider" id="red_cw_1"><p>Speed: </p><p id='red_cw_1p'>0%</p><br>
                     <input type="range" min="0" max="1000000" value="0" class="slider" id="red_cw_2"><p>Speed: </p><p id='red_cw_2p'>0%</p><br>
                     <input type="range" min="0" max="1000000" value="0" class="slider" id="black_ccw_1"><p>Speed: </p><p id='black_ccw_1p'>0%</p><br>
-                    <input type="range" min="0" max="1000000" value="0" class="slider" id="black_ccw_2"><p>Speed: </p><p id='black_ccw_2p'>0%</p>
+                    <input type="range" min="0" max="1000000" value="0" class="slider" id="black_ccw_2"><p>Speed: </p><p id='black_ccw_2p'>0%</p><br>
+                    <input type="range" min=="0" max="1000000" value="0" class="slider" id="all_motors"><p>Speed: </p><p id="all_motorsp">0%</p>
                 </div><br>
                 <button class="btn btn-info" id="gyroButton">Get Gyro</button>
                 <br>
@@ -87,8 +89,26 @@
             });
             $("#controls").find("input").on("input", function(){
                 var input = this;
-                $("#" + $(input).attr('id') + "p").html($(input).val()/10000 + "%");
-                updateSpeed(this);
+                if($(input).attr('id') == "all_motors"){
+                    $("#red_cw_1").val($(input).val());
+                    $("#red_cw_2").val($(input).val());
+                    $("#black_ccw_1").val($(input).val());
+                    $("#black_ccw_2").val($(input).val()); 
+                    
+                    $("#red_cw_1p").html($(input).val()/10000 + "%")
+                    $("#red_cw_2p").html($(input).val()/10000 + "%");
+                    $("#black_ccw_1p").html($(input).val()/10000 + "%");
+                    $("#black_ccw_2p").html($(input).val()/10000 + "%"); 
+                    $("#all_motorsp").html($(input).val()/10000 + "%"); 
+                    updateSpeed($("#red_cw_1"));
+                    updateSpeed($("#red_cw_2"));
+                    updateSpeed($("#black_ccw_1"));
+                    updateSpeed($("#black_ccw_1"));
+                }
+                else{
+                    $("#" + $(input).attr('id') + "p").html($(input).val()/10000 + "%");
+                    updateSpeed(this);
+                }
             })            
             $("#gyroButton").click(function(){
                 renderLoop();
